@@ -15,17 +15,22 @@ export default function LawDetail() {
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const loadDetails = async () => {
+  const loadDetails = async (forceRefresh = false) => {
     if (!topicId) return;
     setLoading(true);
     setError(null);
+    
+    if (forceRefresh) {
+      localStorage.removeItem(`legal_detail_${topicId}_${lang}`);
+    }
+
     try {
       const data = await fetchLegalTopicDetails(topicId, lang);
       // Normalize URLs to ensure they are clickable
       if (data.legalActs) {
         data.legalActs = data.legalActs.map(act => ({
           ...act,
-          url: act.url.startsWith('http') ? act.url : `https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/${act.url.split('/').pop()}`
+          url: (act.url && act.url.startsWith('http')) ? act.url : `https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/${(act.url || '').split('/').pop()}`
         }));
       }
       setDetails(data);
@@ -84,7 +89,7 @@ export default function LawDetail() {
             <p className="text-brand-secondary">{error}</p>
           </div>
           <button 
-            onClick={loadDetails}
+            onClick={() => loadDetails(true)}
             className="px-8 py-3 bg-brand-primary text-white font-bold rounded-sm hover:bg-brand-primary/90 transition-all"
           >
             {lang === 'en' ? 'Try Again' : 'Skúsiť znova'}

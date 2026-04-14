@@ -31,7 +31,7 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
     if (!ai) throw new Error("AI service not initialized");
 
     const result = await ai.models.generateContent({
-      model: "gemini-flash-latest",
+      model: "gemini-3-flash-preview",
       contents: "Get the 5 most recent and important legal updates, social insurance changes, health insurance updates, and integration news for foreigners in Slovakia. Provide them in a structured JSON format.",
       config: {
         tools: [{ googleSearch: {} }],
@@ -40,7 +40,7 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
         Use Google Search to find news from the last 30 days. 
         Focus on official sources like the Ministry of Interior, Social Insurance Agency (Sociálna poisťovňa), and major Slovak news outlets.
         If search fails, provide the most recent known updates from your internal database.
-        ALWAYS return a valid JSON array.`,
+        ALWAYS return a valid JSON array. Do not include any markdown formatting or text outside the JSON.`,
         responseSchema: {
           type: Type.ARRAY,
           items: {
@@ -60,7 +60,10 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
 
     const text = result.text;
     if (!text) throw new Error("Empty response from AI");
-    const news = JSON.parse(text);
+    
+    // Clean potential markdown formatting
+    const cleanText = text.replace(/```json\n?|```/g, '').trim();
+    const news = JSON.parse(cleanText);
 
     // Update cache
     localStorage.setItem(CACHE_KEY, JSON.stringify({
