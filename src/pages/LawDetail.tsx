@@ -12,26 +12,32 @@ export default function LawDetail() {
   const navigate = useNavigate();
   const [details, setDetails] = useState<LegalTopicDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    async function loadDetails() {
-      if (!topicId) return;
-      setLoading(true);
-      try {
-        const data = await fetchLegalTopicDetails(topicId, lang);
-        // Normalize URLs to ensure they are clickable
+  const loadDetails = async () => {
+    if (!topicId) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchLegalTopicDetails(topicId, lang);
+      // Normalize URLs to ensure they are clickable
+      if (data.legalActs) {
         data.legalActs = data.legalActs.map(act => ({
           ...act,
           url: act.url.startsWith('http') ? act.url : `https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/${act.url.split('/').pop()}`
         }));
-        setDetails(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
       }
+      setDetails(data);
+    } catch (err) {
+      console.error(err);
+      setError(lang === 'en' ? 'Failed to fetch legal updates. Please try again.' : 'Nepodarilo sa načítať právne informácie. Skúste to znova.');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     loadDetails();
     setIsSidebarOpen(false);
   }, [topicId, lang]);
@@ -61,6 +67,28 @@ export default function LawDetail() {
           <p className="text-brand-secondary font-serif italic">
             {lang === 'en' ? 'Consulting legal database...' : 'Konzultujeme právnu databázu...'}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-brand-bg px-6">
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto">
+            <Info size={32} />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-serif">{lang === 'en' ? 'Update Failed' : 'Aktualizácia zlyhala'}</h2>
+            <p className="text-brand-secondary">{error}</p>
+          </div>
+          <button 
+            onClick={loadDetails}
+            className="px-8 py-3 bg-brand-primary text-white font-bold rounded-sm hover:bg-brand-primary/90 transition-all"
+          >
+            {lang === 'en' ? 'Try Again' : 'Skúsiť znova'}
+          </button>
         </div>
       </div>
     );

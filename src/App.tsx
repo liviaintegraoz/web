@@ -9,6 +9,7 @@ import LawDetail from './pages/LawDetail';
 import Gallery from './pages/Gallery';
 import Download from './pages/Download';
 import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/download" element={<Download />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
       </Router>

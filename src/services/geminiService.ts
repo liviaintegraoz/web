@@ -31,11 +31,12 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
     if (!ai) throw new Error("AI service not initialized");
 
     const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-flash-latest",
       contents: "Get the 5 most recent and important legal updates, social insurance changes, health insurance updates, and integration news for foreigners in Slovakia. Provide them in a structured JSON format.",
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
+        systemInstruction: "You are a news curator specializing in Slovak legal and social updates for foreigners. Provide the latest news based on current events. If search fails, use your internal knowledge of recent trends.",
         responseSchema: {
           type: Type.ARRAY,
           items: {

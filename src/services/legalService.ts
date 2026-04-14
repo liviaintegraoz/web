@@ -63,11 +63,12 @@ export async function fetchLegalTopicDetails(topicId: string, lang: 'en' | 'sk')
     if (!ai) throw new Error("AI service not initialized. Please check GEMINI_API_KEY.");
 
     const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-flash-latest",
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
+        systemInstruction: "You are a legal expert on Slovak law. If the search tool fails, use your extensive internal knowledge to provide the most accurate and up-to-date information possible. Always ensure the JSON structure is valid.",
         responseSchema: {
           type: Type.OBJECT,
           properties: {
