@@ -36,7 +36,11 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
-        systemInstruction: "You are a news curator specializing in Slovak legal and social updates for foreigners. Provide the latest news based on current events. If search fails, use your internal knowledge of recent trends.",
+        systemInstruction: `You are a news curator specializing in Slovak legal and social updates for foreigners. 
+        Use Google Search to find news from the last 30 days. 
+        Focus on official sources like the Ministry of Interior, Social Insurance Agency (Sociálna poisťovňa), and major Slovak news outlets.
+        If search fails, provide the most recent known updates from your internal database.
+        ALWAYS return a valid JSON array.`,
         responseSchema: {
           type: Type.ARRAY,
           items: {

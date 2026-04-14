@@ -68,7 +68,11 @@ export async function fetchLegalTopicDetails(topicId: string, lang: 'en' | 'sk')
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
-        systemInstruction: "You are a legal expert on Slovak law. If the search tool fails, use your extensive internal knowledge to provide the most accurate and up-to-date information possible. Always ensure the JSON structure is valid.",
+        systemInstruction: `You are a legal expert on Slovak law. 
+        Your task is to provide accurate, up-to-date legal information. 
+        Use the Google Search tool to find the latest changes in Slovak legislation (Slov-Lex, government portals).
+        If the search tool is unavailable or fails, use your internal knowledge to provide the most reliable information possible.
+        ALWAYS return a valid JSON object following the requested schema. Do not include any text outside the JSON.`,
         responseSchema: {
           type: Type.OBJECT,
           properties: {
