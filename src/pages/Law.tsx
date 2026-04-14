@@ -1,17 +1,10 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { Scale, FileText, Gavel, Heart } from 'lucide-react';
+import { LAW_TOPICS } from '../constants';
 
 export default function Law() {
   const { t } = useLanguage();
-
-  const topics = [
-    { id: 'residency', icon: <Scale size={24} /> },
-    { id: 'labor', icon: <FileText size={24} /> },
-    { id: 'civil-rights', icon: <Gavel size={24} /> },
-    { id: 'human-rights', icon: <Heart size={24} /> },
-  ];
 
   return (
     <section className="py-32 min-h-screen">
@@ -35,13 +28,13 @@ export default function Law() {
               transition={{ delay: idx * 0.1 }}
               className="space-y-6"
             >
-              <div className="text-brand-primary">{topics[idx].icon}</div>
+              <div className="text-brand-primary">{LAW_TOPICS[idx].icon}</div>
               <h3 className="text-2xl">{topic.title}</h3>
               <p className="text-brand-secondary leading-relaxed">
                 {topic.description}
               </p>
               <Link 
-                to={`/law/${topics[idx].id}`}
+                to={`/law/${LAW_TOPICS[idx].id}`}
                 className="inline-block text-sm font-bold uppercase tracking-widest text-brand-primary hover:underline"
               >
                 {t.law.readMore}

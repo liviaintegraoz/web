@@ -15,7 +15,19 @@ export interface NewsItem {
 }
 
 export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
+  const CACHE_KEY = 'slovak_legal_news_cache';
+  const CACHE_DURATION = 1000 * 60 * 60 * 12; // 12 hours
+
   try {
+    // Check cache first
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < CACHE_DURATION) {
+        return data;
+      }
+    }
+
     if (!ai) throw new Error("AI service not initialized");
 
     const result = await ai.models.generateContent({
@@ -44,10 +56,24 @@ export async function fetchLatestSlovakLegalNews(): Promise<NewsItem[]> {
     const text = result.text;
     if (!text) throw new Error("Empty response from AI");
     const news = JSON.parse(text);
+
+    // Update cache
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      data: news,
+      timestamp: Date.now()
+    }));
+
     return news;
   } catch (error) {
     console.error("Error fetching news from Gemini:", error);
-    // Fallback data in case of API failure or key issues
+    
+    // Try to return stale cache if available
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data } = JSON.parse(cached);
+      return data;
+    }
+
     return [
       {
         title: "Social Insurance Updates 2026",

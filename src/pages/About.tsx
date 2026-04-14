@@ -45,19 +45,28 @@ export default function About() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="relative flex justify-center lg:justify-end"
           >
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=2070" 
-                alt="Team working" 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div className="absolute -bottom-8 -left-8 glass p-8 rounded-xl hidden md:block max-w-xs shadow-xl">
-              <p className="font-serif italic text-lg text-brand-primary mb-2">"Bridging the gap between cultures."</p>
-              <p className="text-xs font-bold uppercase tracking-widest text-brand-secondary">LiVia Integra Team</p>
+            <div className="relative max-w-sm w-full">
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-brand-bg">
+                <img 
+                  src="https://res.cloudinary.com/dof3jb9jb/image/upload/f_auto,q_auto/Foto_link_rmz0o0" 
+                  alt="Lívia Hamráčková" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 md:-left-12 glass p-6 rounded-xl shadow-xl max-w-[240px]">
+                <p className="font-serif italic text-brand-primary mb-2 text-base leading-tight">
+                  "Bridging the gap between cultures."
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-ink mb-1">
+                  Lívia Hamráčková
+                </p>
+                <p className="text-[9px] text-brand-secondary leading-tight">
+                  CEO and Founder of LiVia Integra o.z
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
