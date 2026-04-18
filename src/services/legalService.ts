@@ -31,28 +31,27 @@ export async function fetchLegalTopicDetails(topicId: string, lang: 'en' | 'sk')
     }
 
     const prompt = `
-      Provide detailed, professional, and up-to-date legal information for foreigners in Slovakia regarding the topic: "${topicId}".
+      Provide professional legal information for foreigners in Slovakia regarding the topic: "${topicId}".
       
-      Structure the response for two main groups:
-      1. EU/EEA/Swiss Citizens (Občania EÚ/EHP/Švajčiarska)
-      2. Third-Country Nationals (Štátni príslušníci tretích krajín)
-      
-      For "residency", include all types of stays (temporary, permanent, tolerated).
-      For "labor", include employment rights, types of work permits, and business-based stays.
-      For "civil-rights", include fundamental rights, human rights, the Charter of Fundamental Rights of the EU, and documents related to integration and migration in Slovakia.
-      For "human-rights", include fundamental human rights and freedoms, children's rights (Convention on the Rights of the Child), and international treaties/conventions Slovakia is bound by.
-      
-      The tone should be professional and empathetic.
-      Language: ${lang === 'sk' ? 'Slovak' : 'English'}.
-      
-      Include a list of the most relevant current Slovak laws (e.g., Act No. 404/2011 on Residence of Aliens).
-      CRITICAL: For each law, provide a direct URL to the official consolidated text on Slov-Lex (slov-lex.sk) or a similar official government source. Ensure the URLs are valid and point to the current version.
+      CRITICAL INSTRUCTIONS:
+      1. Use a "BAIT/HOOK" approach. Do NOT explain the full procedures. 
+      2. Mention relevant laws (e.g., Act No. 404/2011) and key institutions involved (e.g., Foreign Police, Ministry of Interior, Labor Office).
+      3. For the "residency" topic, MUST include sections for:
+         - Students (Štúdium)
+         - Employment/Work (Zamestnanie)
+         - Business (Podnikanie)
+         - Family Reunification (Zlúčenie rodiny)
+         - Permanent Residence (Trvalý pobyt)
+         - Special Activities (Osobitná činnosť - art, sport, volunteering)
+      4. Each section should highlight a "complexity" or "benefit" (e.g., "Strategic advantage for firms", "Simplified process for top talent") to motivate the user to contact us for a full consultation.
+      5. The tone should be high-level, professional, and slightly "exclusive".
+      6. Language: ${lang === 'sk' ? 'Slovak' : 'English'}.
       
       Return the data in the following JSON format:
       {
         "title": "Topic Title",
         "sections": [
-          { "title": "Section Title", "content": "Introductory text", "items": ["Point 1", "Point 2"] }
+          { "title": "Section Title", "content": "The 'hook' text mentioning laws/institutions but keeping full details for consultation.", "items": ["Benefit 1", "Specific Law Reference", "Target Group"] }
         ],
         "legalActs": [
           { "name": "Law Name", "url": "https://..." }
@@ -133,36 +132,59 @@ export async function fetchLegalTopicDetails(topicId: string, lang: 'en' | 'sk')
     // Hardcoded fallbacks for reliability
     const fallbacks: Record<string, LegalTopicDetail> = {
       residency: {
-        title: lang === 'en' ? 'Residency Permits' : 'Pobytové povolenia',
+        title: lang === 'en' ? 'Exclusive Residency Navigation' : 'Exkluzívna navigácia pobytov',
         sections: [
           {
-            title: lang === 'en' ? 'Temporary Residence' : 'Prechodný pobyt',
+            title: lang === 'en' ? 'Strategic Business Residency' : 'Strategický pobyt za účelom podnikania',
             content: lang === 'en' 
-              ? 'Temporary residence allows third-country nationals to stay in Slovakia for a specific purpose, such as employment, business, or study.' 
-              : 'Prechodný pobyt umožňuje štátnym príslušníkom tretích krajín zdržiavať sa na Slovensku na konkrétny účel, ako je zamestnanie, podnikanie alebo štúdium.',
+              ? 'Navigating Act No. 404/2011 requires precision. For foreign entrepreneurs and firms, the interplay between the Ministry of Interior and specific labor regulations can decide the timeline of your market entry.' 
+              : 'Navigácia v zákone č. 404/2011 vyžaduje precíznosť. Pre zahraničných podnikateľov a firmy môže súhra medzi Ministerstvom vnútra a špecifickými pracovnými predpismi rozhodnúť o časovom harmonograme vášho vstupu na trh.',
             items: [
-              lang === 'en' ? 'Employment purposes' : 'Účel zamestnania',
-              lang === 'en' ? 'Business activities' : 'Účel podnikania',
-              lang === 'en' ? 'Family reunification' : 'Účel zlúčenia rodiny'
+              lang === 'en' ? 'Corporate strategy optimization' : 'Optimalizácia korporátnej stratégie',
+              lang === 'en' ? 'Inter-institutional liaison' : 'Koordinácia medzi inštitúciami',
+              lang === 'en' ? 'Targeted for high-net-worth entities' : 'Zamerané na subjekty s vysokou pridanou hodnotou'
+            ]
+          },
+          {
+            title: lang === 'en' ? 'Employment & Talent Integration' : 'Zamestnanie a integrácia talentov',
+            content: lang === 'en'
+              ? 'The path from labor market analysis to a successful residence permit is paved with strict documentation requirements. We bridge the gap between firms and the Labor Office (ÚPSVaR).'
+              : 'Cesta od analýzy trhu práce k úspešnému povoleniu na pobyt je dláždená prísnymi dokumentačnými požiadavkami. Premosťujeme priepasť medzi firmami a úradmi práce (ÚPSVaR).',
+            items: [
+              lang === 'en' ? 'Blue Card advantages' : 'Výhody Modrej karty',
+              lang === 'en' ? 'Single permit complexities' : 'Komplexnosť jednotného povolenia',
+              lang === 'en' ? 'Strategic hiring support' : 'Podpora pri strategickom nábore'
+            ]
+          },
+          {
+            title: lang === 'en' ? 'Academic & Special Activities' : 'Akademické a osobitné činnosti',
+            content: lang === 'en'
+              ? 'Students and specialists (art, sports, volunteering) face unique regulatory hurdles. Managing the transition to other stay types later is where early strategy pays off.'
+              : 'Študenti a špecialisti (umenie, šport, dobrovoľníctvo) čelia jedinečným regulačným prekážkam. Správne nastavenie prechodu na iné typy pobytov je miesto, kde sa včasná stratégia vyplatí.',
+            items: [
+              lang === 'en' ? 'Specialized legal anchors' : 'Špecializované právne ukotvenia',
+              lang === 'en' ? 'Future status planning' : 'Plánovanie budúceho statusu',
+              lang === 'en' ? 'Institutional compliance' : 'Inštitucionálny compliance'
             ]
           }
         ],
         legalActs: [
-          { name: 'Act No. 404/2011 on Residence of Aliens', url: 'https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2011/404/' }
+          { name: 'Act No. 404/2011 on Residence of Aliens', url: 'https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2011/404/' },
+          { name: 'Act No. 5/2004 on Employment Services', url: 'https://www.slov-lex.sk/pravne-predpisy/SK/ZZ/2004/5/' }
         ]
       },
       labor: {
-        title: lang === 'en' ? 'Labor Law' : 'Pracovné právo',
+        title: lang === 'en' ? 'Premium Labor Advisory' : 'Prémiové pracovnoprávne poradenstvo',
         sections: [
           {
-            title: lang === 'en' ? 'Employment Contracts' : 'Pracovné zmluvy',
+            title: lang === 'en' ? 'Contractual Shielding' : 'Zmluvné štíty',
             content: lang === 'en'
-              ? 'All employment relationships in Slovakia must be based on a written contract specifying the type of work, place of work, and salary.'
-              : 'Všetky pracovnoprávne vzťahy na Slovensku musia byť založené na písomnej zmluve určujúcej druh práce, miesto výkonu práce a mzdu.',
+              ? 'The Labor Code (Act No. 311/2001) protects, but also binds. For international firms, standard contracts often fail to address specific cross-border complexities.'
+              : 'Zákonník práce (zákon č. 311/2001) chráni, ale aj zaväzuje. Pre medzinárodné firmy štandardné zmluvy často nedokážu ošetriť špecifické cezhraničné komplexnosti.',
             items: [
-              lang === 'en' ? 'Standard 40-hour week' : 'Štandardný 40-hodinový týždeň',
-              lang === 'en' ? 'Minimum wage protection' : 'Ochrana minimálnej mzdy',
-              lang === 'en' ? 'Paid vacation rights' : 'Právo na platenú dovolenku'
+              lang === 'en' ? 'Customized liability clauses' : 'Doložky o zodpovednosti na mieru',
+              lang === 'en' ? 'Regulatory compliance audits' : 'Audity súladu s predpismi',
+              lang === 'en' ? 'Labor Office mediation' : 'Mediácia s úradmi práce'
             ]
           }
         ],

@@ -12,12 +12,13 @@ export default function NewsSlider() {
 
   useEffect(() => {
     async function loadNews() {
-      const data = await fetchLatestSlovakLegalNews();
+      setLoading(true);
+      const data = await fetchLatestSlovakLegalNews(lang);
       setNews(data);
       setLoading(false);
     }
     loadNews();
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     if (news.length === 0) return;
